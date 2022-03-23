@@ -1,2 +1,2 @@
 # IBAS
-This is a repository for practicing data analysis using Python.
+Python을 이용한 데이터 분석을 연습하기 위한 연습용 저장소입니다.
