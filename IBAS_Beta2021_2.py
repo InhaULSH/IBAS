@@ -5,6 +5,7 @@ import json as js
 # 데이터 전처리
 # 병원자료
 dataframe = pd.read_csv("data/Beta2021/1. 병원정보서비스 2021.6.csv", encoding = "cp949")
+# 공공데이터포털의 '건강보험심사평가원_전국 병의원 및 약국 현황' 자료에서 2021년 6월 시점의 병원정보서비스 데이터를 활용
 print(dataframe.isnull().sum())
 dataframe = dataframe.dropna(subset = ["x좌표", "y좌표"]) # X 좌표나 Y 좌표에 결측치가 있는 병원 제거
 drop_hospitals = dataframe.loc[dataframe["총의사수"] < 11, "총의사수"].index
@@ -44,6 +45,7 @@ dataframe_GG_South = dataframe_GG.drop(drop_cities, axis = 0) # 경기남부의 
 
 # 인구 자료
 dataframe_Population = pd.read_csv("data/Beta2021/행정구역_읍면동_별_5세별_주민등록인구_2011년__20210810183451.csv", encoding = "cp949")
+# 국가톹계포털의 '행정구역(읍면동)별/5세별 주민등록인구(2011년~)' 자료에서 2021년 8월 10일 시점의 전국 시군 및 구(광역시) 단위의 인구데이터를 활용
 print(dataframe_Population.isnull().sum())
 drop_gu = dataframe_Population.loc[dataframe_Population["행정구역(동읍면)별"].isin(["수원시", "성남시", "용인시", "고양시", "안양시", "안산시", "서울특별시", "경기도", "인천광역시"])].index # 구가 존재하는 시들의 인구 합계 데이터를 제외
 dataframe_Population = dataframe_Population.drop(drop_gu, axis = 0)
