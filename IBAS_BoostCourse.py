@@ -41,7 +41,8 @@ df_AllSort = df.sort_values("a") #데이터 프레임 전체를 한 열을 기�
 df_ReverseSort = df.sort_values("a", ascending = False) #데이터 프레임 전체를 한 열을 기준으로 값들을 역순으로 정렬해줌
 df_IndexSort = df.sort_index() #데이터 프레임 전체를 인덱스를 기준으로 값들을 정렬해줌
 print(df_ColumSort, df_AllSort, df_ReverseSort)
-df = df.drop(["c"], axis = 1) #일정한 기준으로 행이나 열을 삭제함, 항상 삭제한 것을 원래 데이터 프레임에 대입해 줘야함
+df = df.drop(["c"], axis = 1) #일정한 기준으로 행(axis = 0)이나 열(axis = 1)을 삭제함, 항상 삭제한 것을 원래 데이터 프레임에 대입해 줘야함
+# df.drop(["c"], axis = 1, Inplace = True) 혹은 Inplace 옵션을 통해 바로 적용되도록 할 수 있음
 print(df)
 pd.melt(df) #행에 있는 데이터를 열로 분배해줌
             #    행1 행2 행3        열1 행1 X
