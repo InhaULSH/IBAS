@@ -91,7 +91,7 @@ dataframe_Population_GG_South = dataframe_Population.loc[dataframe_Population["�
 "광주시", "여주시", "양평군"])].copy() # 경기 남부 행정구역들의 인구 자료를 불러옴
 
 # 데이터 시각화
-geo_data = js.load(open("data/Beta2021/skorea_municipalities_geo_simple.json", encoding = "utf-8"))
+geo_data = js.load(open("data/Beta2021/skorea_municipalities_geo_simple.json", encoding = "utf-8")) # 전국 시군 및 구(광역시) 지리 데이터를 불러옴
 Map1_Hospital = fl.Map(location = [dataframe_ICN["y좌표"].mean(), dataframe_ICN["x좌표"].mean()], zoom_start = 11)
 for X in dataframe_ICN.index :
     if dataframe_ICN["총의사수"][X] > 1000 :

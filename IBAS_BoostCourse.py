@@ -42,13 +42,17 @@ df_ReverseSort = df.sort_values("a", ascending = False) #데이터 프레임 전
 df_IndexSort = df.sort_index() #데이터 프레임 전체를 인덱스를 기준으로 값들을 정렬해줌
 print(df_ColumSort, df_AllSort, df_ReverseSort)
 df = df.drop(["c"], axis = 1) #일정한 기준으로 행(axis = 0)이나 열(axis = 1)을 삭제함, 항상 삭제한 것을 원래 데이터 프레임에 대입해 줘야함
-# df.drop(["c"], axis = 1, Inplace = True) 혹은 Inplace 옵션을 통해 바로 적용되도록 할 수 있음
+# df.drop(["c"], axis = 1, Inplace = True) #혹은 Inplace 옵션을 통해 바로 적용되도록 할 수 있음
+# df.set_index("c". inplace = True) #인덱스를 특정 열로 대체할 수 있음
 print(df)
-pd.melt(df) #행에 있는 데이터를 열로 분배해줌
-            #    행1 행2 행3        열1 행1 X
-            # 열1 X   Y   Z    ==> 열1 행2 Y
-            # 열2 A   B   C        열1 행3 Z
-            #                      열2 행1 A ....
+pd.melt(df) #열에 있는 데이터를 행으로 분배해줌
+            #    열1 열2 열3        행1 열1 X
+            # 행1 X   Y   Z    ==> 행1 열2 Y
+            # 행2 A   B   C        행1 열3 Z
+            #                      행2 열1 A ....
+print(df.loc["c"])
+print(df.loc["a": "c"]) # 데이터프레임의 행이나 열에 라벨이름으로 접근하여 가져옴
+print(df.iloc[2:3]) # 데이터프레임의 행이나 열에 인덱스로 접근하여 가져옴
 
 #데이터 집계
 df_mean = df.groupby(["a"])["b"].mean() # a열을 기준으로하여 b열의 최솟값을 계산함
@@ -86,6 +90,7 @@ nullCount.plot.barh(figsize = (5,7)) #세로 막대그래프를 보여주면서 
 
 #결측치가 많은 컬럼 삭제하기
 df_null_count = nullCount.reset_index() #리셋인덱스를 통해 데이터프레임 형태로 바꿀 수 있음
+# df.reset_index() #기본적으로는 인덱스를 초기화(다시 0부터 부여)하는 기능을 함
 print(df_null_count.head())
 df_null_count.columns = ["컬럼명", "결측치수"] #데이터프레임의 컬럼명을 변경할 수 있음
 print(df_null_count.head())
