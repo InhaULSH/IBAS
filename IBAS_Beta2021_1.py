@@ -9,21 +9,22 @@ if os.name == "nt":
 plt.rc("axes", unicode_minus = False)
 
 dataframe = pd.read_csv("data/한국전력공사_낙뢰관측 정보_20200413.csv", encoding = "cp949")
+# 공공데이터포털의 '한국전력공사_낙뢰관측 정보' 자료에서 2020년 4월 13일 시점의 한국전력공사_낙뢰관측 정보_20181031 파일을 활용
 drop_list1 = dataframe.loc[dataframe["낙뢰크기"] == 0, "낙뢰크기"].index
 drop_list1 = drop_list1.tolist()
-dataframe = dataframe.drop(drop_list1, axis = 0)
+dataframe = dataframe.drop(drop_list1, axis = 0) # 낙뢰 크기가 0인 행 제외
 drop_list2 = dataframe.loc[(dataframe["위도"] > 39), "위도"].index
 drop_list2 = drop_list2.tolist()
-dataframe = dataframe.drop(drop_list2, axis = 0)
+dataframe = dataframe.drop(drop_list2, axis = 0) # 위도가 39 초과인 행 제외
 drop_list3 = dataframe.loc[(dataframe["위도"] < 33), "위도"].index
 drop_list3 = drop_list3.tolist()
-dataframe = dataframe.drop(drop_list3, axis = 0)
+dataframe = dataframe.drop(drop_list3, axis = 0) # 위도가 33 미만인 행 제외
 drop_list4 = dataframe.loc[(dataframe["경도"] > 130), "위도"].index
 drop_list4 = drop_list4.tolist()
-dataframe = dataframe.drop(drop_list4, axis = 0)
+dataframe = dataframe.drop(drop_list4, axis = 0) # 경도가 130 초과인 행 제외
 drop_list5 = dataframe.loc[(dataframe["경도"] < 126), "위도"].index
 drop_list5 = drop_list5.tolist()
-dataframe = dataframe.drop(drop_list5, axis = 0)
+dataframe = dataframe.drop(drop_list5, axis = 0) # 경도가 136 미만인 행 제외
 dataframe["월"] = dataframe["낙뢰발생일"].map(lambda x : int (x.split("-")[1]))
 dataframe["발생횟수"] = 1
 for X in dataframe.index :
