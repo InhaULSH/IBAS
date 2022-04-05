@@ -11,4 +11,4 @@ IBAS_BoostCourse : Pandas, Numpy, Seaborn 모듈을 이용한 데이터 분석 �
 IBAS_Beta2021_1 : 낙뢰관측 데이터를 분석하고 시각화를 연습해본 파일입니다<br />
 IBAS_Beta2021_2 : 수도권 의료기관들의 현황 및 수도권 지역별 의료인프라에 대해 분석하고 시각화 해본 파일입니다<br />
 Map0_Hospital ~ Map4_Hospital : 수도권 지역별로 의료기관들의 위치와 크기를 시각화한 자료입니다<br />
-Map0_Population ~ Map4_HPopulation : 수도권 지역별로 의사당 담당 환자수를 시각화한 자료입니다<br />
+Map0_Population ~ Map4_Population : 수도권 지역별로 의사당 담당 환자수를 시각화한 자료입니다<br />
