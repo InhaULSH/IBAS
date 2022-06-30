@@ -2,12 +2,12 @@
 Python을 이용한 데이터 분석을 연습하기 위한 연습용 저장소입니다.
 
 <h4>아래 파일들은 IBAS 2021-1학기 및 2학기활동을 정리한 것입니다</h4>
-IBAS_1 ~ 7 : 파이썬 문법을 공부한 것을 정리한 파일입니다<br />
+IBAS_Python : 파이썬 문법을 공부한 것을 정리한 파일입니다<br />
 12212312_이상호1 ~ 정복문제 : 파이썬 문법을 공부하면서 풀었던 과제를 정리한 파일입니다<br />
-IBAS 8 ~ 11 : 파이썬 모듈과 Youtube API를 이용해 Youtube를 분석하는 방법을 공부한 것을 정리한 파일입니다<br />
+IBAS_DataAnalyze : 파이썬 모듈과 Youtube API를 이용해 Youtube를 분석하는 방법을 공부한 것을 정리한 파일입니다<br />
 
 <h4>아래 파일들은 IBAS 2021-1학기 베타테스터 활동을 정리한 것입니다</h4>
-IBAS_BoostCourse : Pandas, Numpy, Seaborn 모듈을 이용한 데이터 분석 방법을 공부한 것을 정리한 파일입니다<br />
+IBAS_Beta2021_BoostCourse : Pandas, Numpy, Seaborn 모듈을 이용한 데이터 분석 방법을 공부한 것을 정리한 파일입니다<br />
 IBAS_Beta2021_1 : 낙뢰관측 데이터를 분석하고 시각화를 연습해본 파일입니다<br />
 IBAS_Beta2021_2 : 수도권 의료기관들의 현황 및 수도권 지역별 의료인프라에 대해 분석하고 시각화 해본 파일입니다<br />
 Map0_Hospital ~ Map4_Hospital : 수도권 지역별로 의료기관들의 위치와 크기를 시각화한 자료입니다<br />
