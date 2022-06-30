@@ -2,5 +2,6 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/DataSet/module_class.csv" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/DataSet/student_score.csv" charset="x-windows-949" />
   </component>
 </project>
