@@ -6,6 +6,7 @@ IBAS_Python : 파이썬 문법을 공부한 것을 정리한 파일입니다<br 
 12212312_이상호1 ~ 정복문제 : 파이썬 문법을 공부하면서 풀었던 과제를 정리한 파일입니다<br />
 IBAS_DataAnalyze : 파이썬 모듈과 Youtube API를 이용해 Youtube를 분석하는 방법을 공부한 것을 정리한 파일입니다<br />
 IBAS_Pandas : 판다스 모듈을 이용해 데이터를 전처리하고 시각화 해보는 과정을 공부한 것을 정리한 파일입니다<br />
+<h4>과제 제출물 IBAS_Pandas_Practice는 7월 6일 밤까지 완성되는대로 곧 업로드하겠습니다<h4 />
 
 <h4>아래 파일들은 IBAS 2021-1학기 베타테스터 활동을 정리한 것입니다</h4>
 IBAS_Beta2021_BoostCourse : Pandas, Numpy, Seaborn 모듈을 이용한 데이터 분석 방법을 공부한 것을 정리한 파일입니다<br />
