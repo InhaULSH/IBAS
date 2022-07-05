@@ -18,15 +18,18 @@ sbn.pairplot(data = dataframe, size = 3, hue = 'Species') # 변수별로 같은 
 # 길이1 분    산    산    산
 # 넓이1 산    분    산    산
 # 길이2 산    산    분    산
-# 넓이2 산    산    산    산
+# 넓이2 산    산    산    분
 #     길이1 넓이1 길이2 넓이2
 sbn.swarmplot(x = 'Species', y = 'LengthOfSepal', data = dataframe) # 한 변수에서 종에 따른 분포도를 시각화, 점 그래프 형태
 sbn.violinplot(x = 'Species', y = 'LengthOfSepal', data = dataframe) # 한 변수에서 종에 따른 분포도를 시각화, 바이올린 그래프 형태
 sbn.heatmap(dataframe.corr(), annot = True, cmap = 'Blues') # 변수끼리의 상관계수를 히트맵으로 시각화
 
 dataframe_score = pd.read_csv('./DataSet/student_score.csv', sep = ',', encoding = 'cp949') # 학생점수 데이터를 불러옴
-plt.plot(x = dataframe_score['이름'], y = dataframe_score['평균 점수'], data = dataframe_score) # 학생별 평균 점수를 꺾은 선 그래프로 시각화
-plt.bar(x = dataframe_score['이름'], y = dataframe_score['평균 점수'], data = dataframe_score) # 학생별 평균 점수를 막대 그래프로 시각화
+print(dataframe_score)
+x = dataframe_score['이름']
+y = dataframe_score['평균 점수']
+plt.plot(x, y) # 학생별 평균 점수를 꺾은 선 그래프로 시각화
+plt.bar(x, y) # 학생별 평균 점수를 막대 그래프로 시각화
 plt.ylim(40, 85) # Y축을 특정 구간으로 표시
 plt.xlabel("Student's Name")
 plt.ylabel("Student's Score") # X, Y축 이름을 정함

@@ -12,7 +12,7 @@ print(dataframe)
 Condition = (dataframe["Age"] <= 14) & (dataframe["Parch"] == 0)
 print(Condition)
 # 특정 조건을 만족하는 객체만 가져올 수도 있음, 이때는 비교연산자(&&, == 등)이 아닌 조건연산자(&) 사용
-np.median(dataframe[dataframe["Prices"] == 1]["Fare"])
+np.median(dataframe[dataframe["Pclass"] == 1]["Fare"])
 # numpy를 이용해 특정 조건에 해당하는 객체들의 기술통계량을 확인 가능
 
 
@@ -34,7 +34,7 @@ pd.set_option('display.max_columns', 1000)
 pd.set_option('display.max_rows', 1)
 print(dataframe["Age"])
 dataframe["Age"].fillna(0, inplace = True)
-dataframe["Age"] = np.cell(dataframe["Age"]) # np.round -> 반올림, np.cell -> 올림, np.trunc -> 버림
+dataframe["Age"] = np.ceil(dataframe["Age"]) # np.round -> 반올림, np.ceil -> 올림, np.trunc -> 버림
 # 나이 변수는 값이 없음을 나태는 0으로 대체하고 소숫점이 존재하는 경우 올림처리
 
 dataframe_forVisualize = dataframe.copy() # copy를 쓰면 원래 데이터프레임에 영향을 주지 않음
@@ -42,7 +42,8 @@ dataframe_forVisualize.drop(['Name', 'Ticket'], axis = 1, inplace = True)
 dataframe_forVisualize['Survived'].replace({0 : 'Dead', 1 : 'Survived'}, inplace = True)
 dataframe_forVisualize['Embarked'].replace({'S' : 'SouthHampton', 'C' : 'CherBourg', 'Q' : 'QueensTown'}, inplace = True)
 dataframe_forVisualize['Pclass'].replace({1 : 'First', 2 : 'Second', 3 : 'Third'}, inplace = True)
-dataframe_forVisualize.rename({'Survived' : 'Status', 'Pclass' : 'Cabin Class', 'SibSp' : 'Companion(Sibling and Spouse)', 'Parch' : 'Companion(Parents and Children)'})
+dataframe_forVisualize.rename(columns = {'Survived' : 'Status', 'Pclass' : 'Cabin Class', 'SibSp' : 'Companion(Sibling and Spouse)',
+                                         'Parch' : 'Companion(Parents and Children)'}, inplace = True)
 # 시각화를 용이하게 하기 위해 변수 이름 변경
 
 dataframe_forVisualize.loc[dataframe_forVisualize["Age"] == 0, 'Age Group'] = '-'
@@ -86,26 +87,11 @@ Graph.set(ylim = (0, 200)) # 결측치를 0으로 대체한 것을 고려해 Y�
 
 print(dataframe_forVisualize[dataframe_forVisualize['Status'] == "Surviced"]['Cabin Class'].value_counts()) # 객실 등급별 생존자수 확인
 print(dataframe_forVisualize['Cabin Class'].value_counts()) # 객실 등급별 탑승자수 확인
-print(dataframe_forVisualize['Age Group']['Cabin Class'].value_counts()) # 승객 연령대별 생존자수 확인
+print(dataframe_forVisualize[dataframe_forVisualize['Status'] == "Surviced"]['Age Group'].value_counts()) # 승객 연령대별 생존자수 확인
 print(dataframe_forVisualize['Age Group'].value_counts()) # 승객 연령대별 탑승자수 확인
-print(dataframe_forVisualize['Sex']['Cabin Class'].value_counts()) # 승객 성별에 따른 생존자수 확인
+print(dataframe_forVisualize[dataframe_forVisualize['Status'] == "Surviced"]['Sex'].value_counts()) # 승객 성별에 따른 생존자수 확인
 print(dataframe_forVisualize['Sex'].value_counts()) # 승객 성별에 따른 탑승자수 확인
 # 이를 통해 연령대별, 객실 등급별, 성별별 생존율(생존자 / 탑승자)를 계산할 수 있음
 # 남녀 성별에 따른 생존율 차이는 약 0.5
 # 1등석 승객과 비 1등석 승객의 생존율 차이는 약 0.3
 # 어린이 승객과 비 어린이 승객의 생존율 차이는 약 0.2
-
-StatusList = []
-for i in range(len(dataframe_forVisualize)):
-    StatusList.append(dataframe_forVisualize["생존여부"][i])
-    pass
-# 객체의 특정 관측값을 추출해 리스트에 저장할 수 있음
-StatusQuestion = []
-Score = 0
-for i in range(len(StatusList)):
-    if (StatusList[i] == StatusQuestion[i]):
-        Score += 10
-        pass
-    else:
-        pass
-# 리스트의 값과 입력값을 비교해볼 수도 있음
