@@ -59,38 +59,42 @@ RepayStatVariable = ['REPAYMENT STATUS_SEP', 'REPAYMENT STATUS_AUG', 'REPAYMENT 
 for i in RepayStatVariable:
     dataframe.replace({i : 0}, 'No Overdue', inplace=True)
     dataframe.replace({i : -2}, 'No Overdue', inplace = True)
-# 상환 상태가 범례에서 벗어난 고객은 관측값을 수정
+# 상환 현황 값이 범례에서 벗어난 고객은 관측값을 수정
 MinersBillCustomer = dataframe.loc[(dataframe['CARD BILL_SEP'] < 0) | (dataframe['CARD BILL_AUG'] < 0) | (dataframe['CARD BILL_JUL'] < 0) |
                                    (dataframe['CARD BILL_JUN'] < 0) | (dataframe['CARD BILL_MAY'] < 0) | (dataframe['CARD BILL_APR'] < 0)].index
 dataframe.drop(MinersBillCustomer, inplace = True)
-# 청구액이 음수인 고객 삭제
+# 신용카드 청구액이 음수인 고객 삭제
 
 
 sns.countplot(x = dataframe['SEX'])
 plt.show()
 print(dataframe['SEX'].value_counts())
-# 표본에서 성비 시각화
+# 표본에서의 성비 시각화
 sns.countplot(x = dataframe['EDUCATION'], order = ['Graduate', 'Undergraduate', 'High School', 'Less than Middle School'])
 plt.show()
 print(dataframe['EDUCATION'].value_counts())
-# 표본에서 교육수준 시각화
+# 표본에서의 학력 시각화
 sns.countplot(x = dataframe['MARRIAGE'])
 plt.show()
 print(dataframe['MARRIAGE'].value_counts())
-# 표본에서 결혼여부 시각화
-sns.histplot(x = dataframe['AGE'])
+# 표본에서의 결혼여부 시각화
+dataframe.loc[dataframe[(dataframe['AGE'] >= 20) & (dataframe['AGE'] < 30)].index, 'AGE GROUP'] = '20 - 30'
+dataframe.loc[dataframe[(dataframe['AGE'] >= 30) & (dataframe['AGE'] < 40)].index, 'AGE GROUP'] = '30 - 40'
+dataframe.loc[dataframe[(dataframe['AGE'] >= 40) & (dataframe['AGE'] < 50)].index, 'AGE GROUP'] = '40 - 50'
+dataframe.loc[dataframe[(dataframe['AGE'] >= 50) & (dataframe['AGE'] < 60)].index, 'AGE GROUP'] = '50 - 60'
+dataframe.loc[dataframe[dataframe['AGE'] >= 60].index, 'AGE GROUP'] = '60+'
+sns.countplot(x = dataframe['AGE GROUP'], order = ['20 - 30', '30 - 40', '40 - 50', '50 - 60', '60+'])
+print(dataframe['AGE GROUP'].value_counts())
 plt.show()
-# 표본에서 나이의 분포 시각화
+# 표본에서의 연령대 분포 시각화
 
-print(dataframe.groupby(['SEX']).median())
-print(dataframe.groupby(['SEX']).std())
-# 성별에 따른 변수 중앙값, 표준편차
-Q1_s1 = dataframe['CREDIT LIMIT'].quantile(0.25)
-Q3_s1 = dataframe['CREDIT LIMIT'].quantile(0.75)
-IQR_s1 = Q3_s1 - Q1_s1
-sns.boxplot(x = dataframe['SEX'], y = dataframe.loc[(dataframe['CREDIT LIMIT'] > Q1_s1 - 1.5 * IQR_s1)
-            & (dataframe['CREDIT LIMIT'] < Q3_s1 + 1.5 * IQR_s1)]['CREDIT LIMIT'], data = dataframe)
-plt.show()
+Q1_cl = dataframe['CREDIT LIMIT'].quantile(0.25)
+Q3_cl = dataframe['CREDIT LIMIT'].quantile(0.75)
+IQR_cl = Q3_cl - Q1_cl
+dataframe_CL = dataframe.loc[(dataframe['CREDIT LIMIT'] > Q1_cl - 0.5 * IQR_cl) & (dataframe['CREDIT LIMIT'] < Q3_cl + 0.5 * IQR_cl)]
+# 신용한도 변수에서 이상치 제거
+Fig0 = sns.boxplot(x = dataframe_CL['SEX'], y = dataframe_CL['CREDIT LIMIT'], data = dataframe_CL)
+print(dataframe.groupby(['SEX'])['CREDIT LIMIT'].median())
 # 성별에 따른 신용한도 시각화
 Fig1 = plt.figure(figsize = (25, 25))
 for i in range(len(RepayStatVariable)):
@@ -99,31 +103,207 @@ for i in range(len(RepayStatVariable)):
     ['No Overdue', 'Short-term Overdue', '2 Months ~ 6 Months Overdue', 'Long-term Overdue'], data = dataframe)
     pass
 plt.show()
-# 성별에 따른 상환 상태 시각화
+# 성별에 따른 상환 현황 시각화
 CardBillVariable = ['CARD BILL_SEP', 'CARD BILL_AUG', 'CARD BILL_JUL', 'CARD BILL_JUN', 'CARD BILL_MAY', 'CARD BILL_APR']
 Fig2 = plt.figure(figsize = (25, 25))
 for i in range(len(CardBillVariable)):
+    Q1_cb = dataframe[CardBillVariable[i]].quantile(0.25)
+    Q3_cb = dataframe[CardBillVariable[i]].quantile(0.75)
+    IQR_cb = Q3_cb - Q1_cb
+    dataframe_CB = dataframe.loc[(dataframe[CardBillVariable[i]] > Q1_cb - 0.5 * IQR_cb)
+                                 & (dataframe[CardBillVariable[i]] < Q3_cb + 0.5 * IQR_cb)]
+    # 신용카드 청구액 변수에서 이상치 제거
     Fig2_sub = Fig2.add_subplot(3, 2, i + 1)
-    Q1 = dataframe[CardBillVariable[i]].quantile(0.25)
-    Q3 = dataframe[CardBillVariable[i]].quantile(0.75)
-    IQR = Q3 - Q1
-    sns.boxplot(x=dataframe['SEX'], y=dataframe.loc[(dataframe[CardBillVariable[i]] > Q1 - 0 * IQR)
-    & (dataframe[CardBillVariable[i]] < Q3 + 0 * IQR)][CardBillVariable[i]], data=dataframe)
+    sns.boxplot(x = dataframe_CB['SEX'], y = dataframe_CB[CardBillVariable[i]], data = dataframe_CB)
+    print(dataframe.groupby(['SEX'])[CardBillVariable[i]].median())
     pass
 plt.show()
-# 성별에 따른 카드 대금 청구액 시각화
+# 성별에 따른 신용카드 청구액 시각화
 PrepaidVariable = ['PREPAID_SEP', 'PREPAID_AUG', 'PREPAID_JUL', 'PREPAID_JUN', 'PREPAID_MAY', 'PREPAID_APR']
 Fig3 = plt.figure(figsize = (25, 25))
 for i in range(len(PrepaidVariable)):
+    Q1_pr = dataframe[PrepaidVariable[i]].quantile(0.25)
+    Q3_pr = dataframe[PrepaidVariable[i]].quantile(0.75)
+    IQR_pr = Q3_pr - Q1_pr
+    dataframe_PR = dataframe.loc[(dataframe[PrepaidVariable[i]] > Q1_pr - 0.5 * IQR_pr)
+                                 & (dataframe[PrepaidVariable[i]] < Q3_pr + 0.5 * IQR_pr)]
+    # 선불결제 이용액 변수에서 이상치 제거
     Fig3_sub = Fig3.add_subplot(3, 2, i + 1)
-    Q1 = dataframe[PrepaidVariable[i]].quantile(0.25)
-    Q3 = dataframe[PrepaidVariable[i]].quantile(0.75)
-    IQR = Q3 - Q1
-    sns.boxplot(x=dataframe['SEX'], y=dataframe.loc[(dataframe[PrepaidVariable[i]] > Q1 - 0.5 * IQR)
-    & (dataframe[PrepaidVariable[i]] < Q3 + 0.5 * IQR)][PrepaidVariable[i]], data=dataframe)
+    sns.boxplot(x = dataframe_PR['SEX'], y = dataframe_PR[PrepaidVariable[i]], data = dataframe_PR)
+    print(dataframe.groupby(['SEX'])[PrepaidVariable[i]].median())
     pass
 plt.show()
-# 성별에 따른 선불 결제액 시각화
+# 성별에 따른 선불결제 이용액 시각화
 Fig4 = sns.countplot(x = dataframe['SEX'], hue = dataframe['DEFAULT'], hue_order = ['Yes', 'No'], data = dataframe)
+for p in Fig4.patches:
+    height = p.get_height()
+    Fig4.text(p.get_x() + p.get_width() / 2., height + 3, height, ha = 'center', size = 9)
+plt.show()
 # 성별에 따른 채무불이행 여부 시각화
 
+Q1_cl = dataframe['CREDIT LIMIT'].quantile(0.25)
+Q3_cl = dataframe['CREDIT LIMIT'].quantile(0.75)
+IQR_cl = Q3_cl - Q1_cl
+dataframe_CL = dataframe.loc[(dataframe['CREDIT LIMIT'] > Q1_cl - 0.5 * IQR_cl) & (dataframe['CREDIT LIMIT'] < Q3_cl + 0.5 * IQR_cl)]
+# 신용한도 변수에서 이상치 제거
+Fig0 = sns.boxplot(x = dataframe_CL['EDUCATION'], y = dataframe_CL['CREDIT LIMIT'],
+       order = ['Graduate', 'Undergraduate', 'High School', 'Less than Middle School'], data = dataframe_CL)
+print(dataframe.groupby(['EDUCATION'])['CREDIT LIMIT'].median())
+# 학력에 따른 신용한도 시각화
+Fig1 = plt.figure(figsize = (25, 25))
+for i in range(len(RepayStatVariable)):
+    Fig1_sub = Fig1.add_subplot(3, 2, i + 1)
+    sns.countplot(x = dataframe['EDUCATION'], order = ['Graduate', 'Undergraduate', 'High School', 'Less than Middle School'],
+    hue = dataframe[RepayStatVariable[i]], hue_order = ['No Overdue', 'Short-term Overdue', '2 Months ~ 6 Months Overdue', 'Long-term Overdue'], data = dataframe)
+    pass
+plt.show()
+# 학력에 따른 상환 현황 시각화
+CardBillVariable = ['CARD BILL_SEP', 'CARD BILL_AUG', 'CARD BILL_JUL', 'CARD BILL_JUN', 'CARD BILL_MAY', 'CARD BILL_APR']
+Fig2 = plt.figure(figsize = (25, 25))
+for i in range(len(CardBillVariable)):
+    Q1_cb = dataframe[CardBillVariable[i]].quantile(0.25)
+    Q3_cb = dataframe[CardBillVariable[i]].quantile(0.75)
+    IQR_cb = Q3_cb - Q1_cb
+    dataframe_CB = dataframe.loc[(dataframe[CardBillVariable[i]] > Q1_cb - 0 * IQR_cb)
+                                 & (dataframe[CardBillVariable[i]] < Q3_cb + 0 * IQR_cb)]
+    # 신용카드 청구액 변수에서 이상치 제거
+    Fig2_sub = Fig2.add_subplot(3, 2, i + 1)
+    sns.boxplot(x = dataframe_CB['EDUCATION'], y = dataframe_CB[CardBillVariable[i]],
+    order = ['Graduate', 'Undergraduate', 'High School', 'Less than Middle School'], data = dataframe_CB)
+    print(dataframe.groupby(['EDUCATION'])[CardBillVariable[i]].median())
+    pass
+plt.show()
+# 학력에 따른 신용카드 청구액 시각화
+PrepaidVariable = ['PREPAID_SEP', 'PREPAID_AUG', 'PREPAID_JUL', 'PREPAID_JUN', 'PREPAID_MAY', 'PREPAID_APR']
+Fig3 = plt.figure(figsize = (25, 25))
+for i in range(len(PrepaidVariable)):
+    Q1_pr = dataframe[PrepaidVariable[i]].quantile(0.25)
+    Q3_pr = dataframe[PrepaidVariable[i]].quantile(0.75)
+    IQR_pr = Q3_pr - Q1_pr
+    dataframe_PR = dataframe.loc[(dataframe[PrepaidVariable[i]] > Q1_pr - 0.125 * IQR_pr)
+                                 & (dataframe[PrepaidVariable[i]] < Q3_pr + 0.125 * IQR_pr)]
+    # 선불결제 이용액 변수에서 이상치 제거
+    Fig3_sub = Fig3.add_subplot(3, 2, i + 1)
+    sns.boxplot(x = dataframe_PR['EDUCATION'], y = dataframe_PR[PrepaidVariable[i]],
+    order = ['Graduate', 'Undergraduate', 'High School', 'Less than Middle School'], data = dataframe_PR)
+    print(dataframe.groupby(['EDUCATION'])[PrepaidVariable[i]].median())
+    pass
+plt.show()
+# 학력에 따른 선불결제 이용액 시각화
+Fig4 = sns.countplot(x = dataframe['EDUCATION'], order = ['Graduate', 'Undergraduate', 'High School', 'Less than Middle School'],
+                     hue = dataframe['DEFAULT'], hue_order = ['Yes', 'No'], data = dataframe)
+for p in Fig4.patches:
+    height = p.get_height()
+    Fig4.text(p.get_x() + p.get_width() / 2., height + 3, height, ha = 'center', size = 9)
+plt.show()
+# 학력에 따른 채무불이행 여부 시각화
+
+Q1_cl = dataframe['CREDIT LIMIT'].quantile(0.25)
+Q3_cl = dataframe['CREDIT LIMIT'].quantile(0.75)
+IQR_cl = Q3_cl - Q1_cl
+dataframe_CL = dataframe.loc[(dataframe['CREDIT LIMIT'] > Q1_cl - 0.75 * IQR_cl) & (dataframe['CREDIT LIMIT'] < Q3_cl + 0.75 * IQR_cl)]
+# 신용한도 변수에서 이상치 제거
+Fig0 = sns.boxplot(x = dataframe_CL['MARRIAGE'], y = dataframe_CL['CREDIT LIMIT'], data = dataframe_CL)
+print(dataframe.groupby(['MARRIAGE'])['CREDIT LIMIT'].median())
+# 결혼여부에 따른 신용한도 시각화
+Fig1 = plt.figure(figsize = (25, 25))
+for i in range(len(RepayStatVariable)):
+    Fig1_sub = Fig1.add_subplot(3, 2, i + 1)
+    sns.countplot(x = dataframe['MARRIAGE'], hue = dataframe[RepayStatVariable[i]], hue_order =
+    ['No Overdue', 'Short-term Overdue', '2 Months ~ 6 Months Overdue', 'Long-term Overdue'], data = dataframe)
+    pass
+plt.show()
+# 결혼여부에 따른 상환 현황 시각화
+CardBillVariable = ['CARD BILL_SEP', 'CARD BILL_AUG', 'CARD BILL_JUL', 'CARD BILL_JUN', 'CARD BILL_MAY', 'CARD BILL_APR']
+Fig2 = plt.figure(figsize = (25, 25))
+for i in range(len(CardBillVariable)):
+    Q1_cb = dataframe[CardBillVariable[i]].quantile(0.25)
+    Q3_cb = dataframe[CardBillVariable[i]].quantile(0.75)
+    IQR_cb = Q3_cb - Q1_cb
+    dataframe_CB = dataframe.loc[(dataframe[CardBillVariable[i]] > Q1_cb - 0.25 * IQR_cb)
+                                 & (dataframe[CardBillVariable[i]] < Q3_cb + 0.25 * IQR_cb)]
+    # 신용카드 청구액 변수에서 이상치 제거
+    Fig2_sub = Fig2.add_subplot(3, 2, i + 1)
+    sns.boxplot(x = dataframe_CB['MARRIAGE'], y = dataframe_CB[CardBillVariable[i]], data = dataframe_CB)
+    print(dataframe.groupby(['MARRIAGE'])[CardBillVariable[i]].median())
+    pass
+plt.show()
+# 결혼여부에 따른 신용카드 청구액 시각화
+PrepaidVariable = ['PREPAID_SEP', 'PREPAID_AUG', 'PREPAID_JUL', 'PREPAID_JUN', 'PREPAID_MAY', 'PREPAID_APR']
+Fig3 = plt.figure(figsize = (25, 25))
+for i in range(len(PrepaidVariable)):
+    Q1_pr = dataframe[PrepaidVariable[i]].quantile(0.25)
+    Q3_pr = dataframe[PrepaidVariable[i]].quantile(0.75)
+    IQR_pr = Q3_pr - Q1_pr
+    dataframe_PR = dataframe.loc[(dataframe[PrepaidVariable[i]] > Q1_pr - 0.25 * IQR_pr)
+                                 & (dataframe[PrepaidVariable[i]] < Q3_pr + 0.25 * IQR_pr)]
+    # 선불결제 이용액 변수에서 이상치 제거
+    Fig3_sub = Fig3.add_subplot(3, 2, i + 1)
+    sns.boxplot(x = dataframe_PR['MARRIAGE'], y = dataframe_PR[PrepaidVariable[i]], data = dataframe_PR)
+    print(dataframe.groupby(['MARRIAGE'])[PrepaidVariable[i]].median())
+    pass
+plt.show()
+# 결혼여부에 따른 선불결제 이용액 시각화
+Fig4 = sns.countplot(x = dataframe['MARRIAGE'], hue = dataframe['DEFAULT'], hue_order = ['Yes', 'No'], data = dataframe)
+for p in Fig4.patches:
+    height = p.get_height()
+    Fig4.text(p.get_x() + p.get_width() / 2., height + 3, height, ha = 'center', size = 9)
+plt.show()
+# 결혼여부에 따른 채무불이행 여부 시각화
+
+Q1_cl = dataframe['CREDIT LIMIT'].quantile(0.25)
+Q3_cl = dataframe['CREDIT LIMIT'].quantile(0.75)
+IQR_cl = Q3_cl - Q1_cl
+dataframe_CL = dataframe.loc[(dataframe['CREDIT LIMIT'] > Q1_cl - 0.75 * IQR_cl) & (dataframe['CREDIT LIMIT'] < Q3_cl + 0.75 * IQR_cl)]
+# 신용한도 변수에서 이상치 제거
+Fig0 = sns.boxplot(x = dataframe_CL['AGE GROUP'], y = dataframe_CL['CREDIT LIMIT'],
+        order = ['20 - 30', '30 - 40', '40 - 50', '50 - 60', '60+'], data = dataframe_CL)
+print(dataframe.groupby(['AGE GROUP'])['CREDIT LIMIT'].median())
+# 연령대에 따른 신용한도 시각화
+Fig1 = plt.figure(figsize = (25, 25))
+for i in range(len(RepayStatVariable)):
+    Fig1_sub = Fig1.add_subplot(3, 2, i + 1)
+    sns.countplot(x = dataframe['AGE GROUP'], order = ['20 - 30', '30 - 40', '40 - 50', '50 - 60', '60+'],
+    hue = dataframe[RepayStatVariable[i]], hue_order = ['No Overdue', 'Short-term Overdue', '2 Months ~ 6 Months Overdue', 'Long-term Overdue'], data = dataframe)
+    pass
+plt.show()
+# 연령대에 따른 상환 현황 시각화
+CardBillVariable = ['CARD BILL_SEP', 'CARD BILL_AUG', 'CARD BILL_JUL', 'CARD BILL_JUN', 'CARD BILL_MAY', 'CARD BILL_APR']
+Fig2 = plt.figure(figsize = (25, 25))
+for i in range(len(CardBillVariable)):
+    Q1_cb = dataframe[CardBillVariable[i]].quantile(0.25)
+    Q3_cb = dataframe[CardBillVariable[i]].quantile(0.75)
+    IQR_cb = Q3_cb - Q1_cb
+    dataframe_CB = dataframe.loc[(dataframe[CardBillVariable[i]] > Q1_cb - 0.25 * IQR_cb)
+                                 & (dataframe[CardBillVariable[i]] < Q3_cb + 0.25 * IQR_cb)]
+    # 신용카드 청구액 변수에서 이상치 제거
+    Fig2_sub = Fig2.add_subplot(3, 2, i + 1)
+    sns.boxplot(x = dataframe_CB['AGE GROUP'], y = dataframe_CB[CardBillVariable[i]],
+    order = ['20 - 30', '30 - 40', '40 - 50', '50 - 60', '60+'], data = dataframe_CB)
+    print(dataframe.groupby(['AGE GROUP'])[CardBillVariable[i]].median())
+    pass
+plt.show()
+# 연령대에 따른 신용카드 청구액 시각화
+PrepaidVariable = ['PREPAID_SEP', 'PREPAID_AUG', 'PREPAID_JUL', 'PREPAID_JUN', 'PREPAID_MAY', 'PREPAID_APR']
+Fig3 = plt.figure(figsize = (25, 25))
+for i in range(len(PrepaidVariable)):
+    Q1_pr = dataframe[PrepaidVariable[i]].quantile(0.25)
+    Q3_pr = dataframe[PrepaidVariable[i]].quantile(0.75)
+    IQR_pr = Q3_pr - Q1_pr
+    dataframe_PR = dataframe.loc[(dataframe[PrepaidVariable[i]] > Q1_pr - 0.25 * IQR_pr)
+                                 & (dataframe[PrepaidVariable[i]] < Q3_pr + 0.25 * IQR_pr)]
+    # 선불결제 이용액 변수에서 이상치 제거
+    Fig3_sub = Fig3.add_subplot(3, 2, i + 1)
+    sns.boxplot(x = dataframe_PR['AGE GROUP'], y = dataframe_PR[PrepaidVariable[i]],
+    order = ['20 - 30', '30 - 40', '40 - 50', '50 - 60', '60+'], data = dataframe_PR)
+    print(dataframe.groupby(['AGE GROUP'])[PrepaidVariable[i]].median())
+    pass
+plt.show()
+# 연령대에 따른 선불결제 이용액 시각화
+Fig4 = sns.countplot(x = dataframe['AGE GROUP'], order = ['20 - 30', '30 - 40', '40 - 50', '50 - 60', '60+'],
+                     hue = dataframe['DEFAULT'], hue_order = ['Yes', 'No'], data = dataframe)
+for p in Fig4.patches:
+    height = p.get_height()
+    Fig4.text(p.get_x() + p.get_width() / 2., height + 3, height, ha = 'center', size = 9)
+plt.show()
+# 연령대에 따른 채무불이행 여부 시각화
