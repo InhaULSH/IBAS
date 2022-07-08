@@ -296,7 +296,7 @@ for i in range(len(PrepaidVariable)):
     Fig3_sub = Fig3.add_subplot(3, 2, i + 1)
     sns.boxplot(x = dataframe_PR['AGE GROUP'], y = dataframe_PR[PrepaidVariable[i]],
     order = ['20 - 30', '30 - 40', '40 - 50', '50 - 60', '60+'], data = dataframe_PR)
-    print(dataframe.groupby(['AGE GROUP'])[PrepaidVariable[i]].median())
+    print(dataframe_PR.groupby(['AGE GROUP'])[PrepaidVariable[i]].median())
     pass
 plt.show()
 # 연령대에 따른 선불결제 이용액 시각화
