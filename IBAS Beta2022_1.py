@@ -4,6 +4,7 @@
 # 시가총액 상위 85개 종목을 선택, 5개년치 종가 데이터가 존재하지 않거나 우선주이거나 민간기업의 지주회사(주요 자회사가 상장되있는 경우) 는 제외
 # 선택된 종목별 파일을 ICT, ENGINEERING, BIO & BEAUTY, RETAIL, TRANSPORT, FINANCE, PUBLIC, SERVICE 분야로 분류하여 폴더로 정리
 import pandas as pd
+import numpy as np
 import os
 
 """ 
