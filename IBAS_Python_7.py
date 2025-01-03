@@ -51,5 +51,5 @@ for X in range(len(List1)) :
 # 사용하고 싶을때 사용할 수 있도록 만든 코드 부품
 # 즉, 파이썬 내장기능이 아닌 외부에서 만들어진 유용한 코드뭉치를 가져오는 것! 'import 모듈이름 as 내 코드에서 쓸 모듈이름'으로 가져올 수 있음!
 # import Numpy as Np
-# 모듈의 일부 기능만 쓰고 싶을때는 'from 모듈이 있는 주소.모듈 import 기능'과 같이 가져올 수 있어! import 뒤에 있는 게 최종목적지야!
+# 모듈의 일부 기능만 쓰고 싶을때는 'from 모듈이 있는 주소.모듈 import 기능'과 같이 가져올 수 있어! import 뒤에 있는 게 최종목적지!
 # from path.Mod import Add
