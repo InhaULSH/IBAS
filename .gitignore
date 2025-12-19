@@ -1,1 +1,7 @@
-./worlds
+.idea/
+.tmp.drivedownload/
+.tmp.driveupload/
+.venv/
+.gitignore
+pyproject.toml
+uv.lock
