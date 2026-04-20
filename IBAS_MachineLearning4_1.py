@@ -125,36 +125,46 @@ print('Variance score : {0:.3f}'.format(r2_score(Y_test, y_preds)))
 # 회귀계수의 증가에 큰 패널티 부여, alpha가 작을 경우 RSS 최소화에 초점
 # L2 규제 => 릿지회귀 : W의 제곱에 패널티 부여, 계수의 크기 조정 vs L1 규제 => 라쏘 회귀 : W의 절댓값에 패널티 부여,
 # 피쳐의 개수 축소 vs L1 + L2 => 엘라스틱 네트 : 계수의 크기 조정과 피쳐의 개수 축소 동시에 실행
+import numpy as np
+import pandas as pd
 from sklearn.linear_model import Ridge
 from sklearn.model_selection import cross_val_score
-boston = load_boston()
-bostonDF = pd.DataFrame(boston.data , columns = boston.feature_names)
-bostonDF['PRICE'] = boston.target
-Y_target = bostonDF['PRICE']
-X_data = bostonDF.drop(['PRICE'],axis=1,inplace=False)
-ridge = Ridge(alpha = 10)
-neg_mse_scores = cross_val_score(ridge, X_data, Y_target, scoring="neg_mean_squared_error", cv = 5)
-rmse_scores  = np.sqrt(-1 * neg_mse_scores)
+data_url = "https://lib.stat.cmu.edu/datasets/boston"
+raw_df = pd.read_csv(data_url, sep="\s+", skiprows=22, header=None)
+data = np.hstack([raw_df.values[::2, :], raw_df.values[1::2, :2]])
+target = raw_df.values[1::2, 2]
+feature_names = ['CRIM', 'ZN', 'INDUS', 'CHAS', 'NOX', 'RM', 'AGE', 'DIS', 'RAD', 'TAX', 'PTRATIO', 'B', 'LSTAT']
+X_data = pd.DataFrame(data, columns=feature_names)
+Y_target = pd.Series(target, name='PRICE')
+# 2. Ridge 회귀 및 교차 검증
+ridge = Ridge(alpha=10)
+neg_mse_scores = cross_val_score(ridge, X_data, Y_target, scoring="neg_mean_squared_error", cv=5)
+rmse_scores = np.sqrt(-1 * neg_mse_scores)
 avg_rmse = np.mean(rmse_scores)
 print(' 5 folds 의 개별 Negative MSE scores: ', np.round(neg_mse_scores, 3))
-print(' 5 folds 의 개별 RMSE scores : ', np.round(rmse_scores,3))
+print(' 5 folds 의 개별 RMSE scores : ', np.round(rmse_scores, 3))
 print(' 5 folds 의 평균 RMSE : {0:.3f} '.format(avg_rmse))
-fig , axs = plt.subplots(figsize=(18, 6) , nrows=1 , ncols=5)
-alphas = [0 , 0.1 , 1 , 10 , 100]
-for pos , alpha in enumerate(alphas) :
-    ridge = Ridge(alpha = alpha)
-    ridge.fit(X_data , Y_target)
-    coeff = pd.Series(data=ridge.coef_ , index=X_data.columns )
-    colname='alpha:'+str(alpha)
+# 3. Alpha 값 변화에 따른 피처별 회귀 계수 시각화
+fig, axs = plt.subplots(figsize=(18, 6), nrows=1, ncols=5)
+# 시각화 및 데이터 저장을 위한 DataFrame 초기화 (중요: 오류 수정 포인트)
+coeff_df = pd.DataFrame()
+alphas = [0, 0.1, 1, 10, 100]
+for pos, alpha in enumerate(alphas):
+    ridge = Ridge(alpha=alpha)
+    ridge.fit(X_data, Y_target)
+    # 회귀 계수를 Series로 변환
+    coeff = pd.Series(data=ridge.coef_, index=X_data.columns)
+    colname = 'alpha:' + str(alpha)
     coeff_df[colname] = coeff
+    # 시각화를 위해 정렬
     coeff = coeff.sort_values(ascending=False)
     axs[pos].set_title(colname)
-    axs[pos].set_xlim(-20, 6)
-    sns.barplot(x=coeff.values , y=coeff.index, ax=axs[pos])
+    axs[pos].set_xlim(-18, 6)
+    sns.barplot(x=coeff.values, y=coeff.index, ax=axs[pos])
+plt.tight_layout()
 plt.show()
-ridge_alphas = [0 , 0.1 , 1 , 10 , 100]
-sort_column = 'alpha:'+str(ridge_alphas[0])
-coeff_df.sort_values(by=sort_column, ascending=False)
+sort_column = 'alpha:' + str(alphas[0])
+print(coeff_df.sort_values(by=sort_column, ascending=False))
 # 릿지 회귀 = L2 규제 : alpha * |W|^2 으로 패널티 부여, 회귀계수의 크기를 감소 시킴
 # alpha와 회귀 성능은 항상 비례하는 것은 아님
 from sklearn.linear_model import Lasso, ElasticNet
@@ -220,6 +230,7 @@ for scale_method in scale_methods:
 from sklearn.datasets import load_breast_cancer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, roc_auc_score
+from sklearn.model_selection import GridSearchCV
 cancer = load_breast_cancer()
 scaler = StandardScaler()
 data_scaled = scaler.fit_transform(cancer.data)
