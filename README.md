@@ -18,5 +18,4 @@ Map0_Population ~ Map4_Population : 수도권 지역별로 의사당 담당 환�
 <h4>아래 파일들은 IBAS 2025년도 이후 활동을 정리한 것입니다</h4>
 IBAS_MachineLearning, GraphNeuralNetwork_ : 머신러닝 기법 전반에 대해 학습한 것을 정리한 파일입니다<br />
 BehavioralAnalysis : 도서 '행동 데이터 분석'을 읽으면서 행동 데이터 분석 과정에 대해 학습한 것을 정리한 파일입니다<br />
-IBAS_DATAUP_RECOMMEND, IBAS_DATAUP_FILTER, DataSet_DATAUP2025 :<br />
-DATA-UP CHALLENGE CONTEST 를 진행하며 어뷰징 리뷰 탐지 기반 로컬 맛집 추천 서비스를 구현한 코드 및 리소스 파일입니다<br />
+IBAS_DATAUP_RECOMMEND, IBAS_DATAUP_FILTER, DataSet_DATAUP2025 : DATA-UP CHALLENGE CONTEST 를 진행하며 어뷰징 리뷰 필터링 기반 로컬 맛집 추천 서비스를 구현한 코드 및 리소스 파일입니다. DataSet_DATAUP2025 폴더에서 보고서와 데이터셋을 확인할 수 있습니다.<br />
